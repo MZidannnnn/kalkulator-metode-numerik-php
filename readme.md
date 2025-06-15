@@ -19,7 +19,7 @@
 * **Frontend**: HTML5, CSS3 (termasuk CSS Variables untuk theming), dan JavaScript (untuk interaktivitas tema).
 * **Backend**: PHP (untuk semua logika perhitungan dan pemrosesan).
 * **Font**: [Poppins](https://fonts.google.com/specimen/Poppins) dari Google Fonts.
-git
+
 ## Cara Menjalankan 🚀
 
 1.  Pastikan Anda memiliki server web lokal seperti **XAMPP** atau **Laragon**.
@@ -38,4 +38,6 @@ git
 * `metode-secant.php`: Kalkulator untuk metode Secant.
 * `metode-iterasi-sederhana.php`: Kalkulator untuk metode Iterasi Sederhana.
 
+
+### Deployment Attempt
 ---
