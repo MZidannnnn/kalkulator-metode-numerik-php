@@ -223,7 +223,7 @@
 
     <main>
         <div class="methods-grid">
-            <a href="metode-newton-raphson.php" class="method-card">
+            <a href="metode-newton.php" class="method-card">
                 <div class="card-icon">📈</div>
                 <h2>Newton-Raphson</h2>
                 <p>Metode pencarian akar yang sangat cepat dan efisien dengan menggunakan pendekatan garis singgung (turunan pertama).</p>
