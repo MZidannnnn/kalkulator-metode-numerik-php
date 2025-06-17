@@ -1,6 +1,3 @@
-<?php
-header('Content-Type: text/html; charset=utf-8');
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -37,8 +34,10 @@ header('Content-Type: text/html; charset=utf-8');
             --btn-back-bg: #f1f3f5;
             --btn-back-hover: #e9ecef;
             --btn-back-text: #495057;
+            --transition-speed: 0.4s;
         }
-        body.dark-mode {
+        /* --- Ganti dari body.dark-mode ke html.dark-mode --- */
+        html.dark-mode {
             --primary-color: #4a90e2;
             --secondary-color: #3a7ac8;
             --background-color: #2c3e50;
@@ -61,9 +60,18 @@ header('Content-Type: text/html; charset=utf-8');
             --btn-back-hover: #4a6278;
             --btn-back-text: #ecf0f1;
         }
+        /* --- PERBAIKAN: CSS untuk Tabel Responsif --- */
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Ini adalah kunci perbaikannya */
+    -webkit-overflow-scrolling: touch; /* Membuat scroll lebih mulus di iOS */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
 
         /* --- Style Dasar & Helper --- */
-        * { box-sizing: border-box; transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
+        * { box-sizing: border-box; transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; padding: 2rem; }
         .container { max-width: 800px; margin: 20px auto; padding: 2.5rem; background-color: var(--card-background); border-radius: 16px; box-shadow: 0 10px 30px var(--shadow-color); position: relative; }
         h1, h2 { color: var(--heading-color); text-align: center; letter-spacing: -0.5px; }
@@ -72,8 +80,8 @@ header('Content-Type: text/html; charset=utf-8');
         .result-section { text-align: center; }
 
         /* --- Tombol Ganti Tema & Tombol Kembali --- */
-        .theme-switcher-container { position: absolute; top: 20px; right: 20px; }
-        #theme-switcher { background: var(--card-background); border: 1px solid var(--border-color); color: var(--heading-color); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px var(--shadow-color); transition: transform 0.3s ease, background-color 0.4s ease; }
+        .theme-switcher-container { position: absolute; top: 20px; right: 20px; z-index: 100;}
+        #theme-switcher { background: var(--card-background); border: 1px solid var(--border-color); color: var(--heading-color); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px var(--shadow-color); transition: transform 0.3s ease, background-color var(--transition-speed) ease; }
         #theme-switcher:hover { transform: scale(1.1); }
         .back-to-home { margin-bottom: 2.5rem; }
         .btn-back { display: inline-block; padding: 10px 20px; background-color: var(--btn-back-bg); color: var(--btn-back-text); text-decoration: none; border-radius: 50px; font-weight: 600; }
@@ -91,7 +99,7 @@ header('Content-Type: text/html; charset=utf-8');
 
         /* --- Tabel --- */
         table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.95rem; }
-        th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--border-color); word-wrap: break-word; }
         th { background-color: transparent; color: var(--heading-color); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.85rem; }
         tr:last-child td { border-bottom: none; }
         tr:hover { background-color: var(--hover-bg); }
@@ -101,7 +109,38 @@ header('Content-Type: text/html; charset=utf-8');
         .final-answer { background-color: var(--success-bg); border-color: var(--success-border); color: var(--success-text); font-size: 1.1em; font-weight: 600; }
         .error-message { background-color: var(--error-bg); border-color: var(--error-border); color: var(--error-text); }
         .convergence-check { background-color: var(--info-bg); border-color: var(--info-border); color: var(--info-text); line-height: 1.6; }
+        /* --- PERBAIKAN: CSS untuk Tampilan Responsif di Mobile --- */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+    .container {
+        padding: 1.5rem;
+    }
+    .form-grid-2-col {
+        grid-template-columns: 1fr; /* Ubah menjadi 1 kolom di layar kecil */
+        gap: 1.25rem; /* Tetap beri jarak antar elemen */
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    .theme-switcher-container {
+        top: 10px;
+        right: 10px;
+    }
+}
     </style>
+    
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'dark-mode') {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) { }
+        })();
+    </script>
 </head>
 <body>
 
@@ -110,7 +149,7 @@ header('Content-Type: text/html; charset=utf-8');
 </div>
 
 <div class="container">
-    <h1>Metode Newton-Raphson</h1>
+    <h1>Kalkulator Metode Newton-Raphson</h1>
 
     <div class="back-to-home">
         <a href="index.php" class="btn-back">&larr; Kembali ke Menu Utama</a>
@@ -147,7 +186,7 @@ header('Content-Type: text/html; charset=utf-8');
     </form>
 
     <?php
-    // --- BLOK PHP TIDAK DIUBAH SAMA SEKALI, HANYA DISALIN DARI VERSI SEBELUMNYA ---
+    // KODE PHP Perhitungan tidak diubah
     if (isset($_POST['hitung'])) {
         function sanitize_decimal($value) { return str_replace(',', '.', $value); }
 
@@ -190,7 +229,9 @@ header('Content-Type: text/html; charset=utf-8');
 
             if ($is_konvergen) {
                 echo "<div class='result-section'><h2>Hasil Perhitungan Iterasi</h2>";
+                echo "<div class='table-wrapper'>"; 
                 echo "<table><tr><th>iterasi</th><th>x(old)</th><th>f(x)</th><th>f'(x)</th><th>x(new)</th><th>galat/error</th><th>keterangan</th></tr>";
+              
 
                 $iter = 1;
                 $x_old = $x0;
@@ -221,6 +262,7 @@ header('Content-Type: text/html; charset=utf-8');
                     $iter++;
                 }
                 echo "</table>";
+                  echo "</div>";
 
                 if ($keterangan == "Berhenti") {
                     echo "<div class='result-box final-answer'>Kesimpulan: Akar dari fungsi f(x) adalah = <strong>" . number_format($x_new, 4) . "</strong></div>";
@@ -235,28 +277,18 @@ header('Content-Type: text/html; charset=utf-8');
 
 <script>
     const themeSwitcher = document.getElementById('theme-switcher');
-    const body = document.body;
-
-    // Fungsi untuk menerapkan tema saat halaman dimuat
-    function applyInitialTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            body.classList.add(savedTheme);
-            if (savedTheme === 'dark-mode') {
-                themeSwitcher.innerHTML = '☀️';
-            } else {
-                themeSwitcher.innerHTML = '🌙';
-            }
+    
+    function setInitialIcon() {
+        if (document.documentElement.classList.contains('dark-mode')) {
+            themeSwitcher.innerHTML = '☀️';
         } else {
-            // Default ke tema terang jika tidak ada yang tersimpan
             themeSwitcher.innerHTML = '🌙';
         }
     }
 
-    // Fungsi untuk mengganti tema
     function switchTheme() {
-        body.classList.toggle('dark-mode');
-        if (body.classList.contains('dark-mode')) {
+        document.documentElement.classList.toggle('dark-mode');
+        if (document.documentElement.classList.contains('dark-mode')) {
             themeSwitcher.innerHTML = '☀️';
             localStorage.setItem('theme', 'dark-mode');
         } else {
@@ -265,8 +297,7 @@ header('Content-Type: text/html; charset=utf-8');
         }
     }
     
-    // Panggil fungsi saat halaman dimuat dan saat tombol diklik
-    document.addEventListener('DOMContentLoaded', applyInitialTheme);
+    document.addEventListener('DOMContentLoaded', setInitialIcon);
     themeSwitcher.addEventListener('click', switchTheme);
 </script>
 

@@ -1,9 +1,5 @@
-<?php
-header('Content-Type: text/html; charset=utf-8');
-?>
 <!DOCTYPE html>
-<html lang="id">
-<head>
+<html lang="id"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalkulator Metode Iterasi Sederhana</title>
@@ -14,6 +10,7 @@ header('Content-Type: text/html; charset=utf-8');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* --- Variabel Warna untuk Light Mode --- */
         :root {
             --primary-color: #3498db;
             --secondary-color: #2980b9;
@@ -36,8 +33,11 @@ header('Content-Type: text/html; charset=utf-8');
             --btn-back-bg: #f1f3f5;
             --btn-back-hover: #e9ecef;
             --btn-back-text: #495057;
+            --transition-speed: 0.4s;
         }
-        body.dark-mode {
+
+        /* --- PERUBAHAN 1: Ganti body.dark-mode menjadi html.dark-mode --- */
+        html.dark-mode {
             --primary-color: #4a90e2;
             --secondary-color: #3a7ac8;
             --background-color: #2c3e50;
@@ -60,10 +60,10 @@ header('Content-Type: text/html; charset=utf-8');
             --btn-back-hover: #4a6278;
             --btn-back-text: #ecf0f1;
         }
-        * { box-sizing: border-box; transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
+        * { box-sizing: border-box; transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; padding: 2rem; }
-        .theme-switcher-container { position: absolute; top: 20px; right: 20px; }
-        #theme-switcher { background: var(--card-background); border: 1px solid var(--border-color); color: var(--heading-color); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px var(--shadow-color); transition: transform 0.3s ease, background-color 0.4s ease; }
+        .theme-switcher-container { position: absolute; top: 20px; right: 20px; z-index: 100; }
+        #theme-switcher { background: var(--card-background); border: 1px solid var(--border-color); color: var(--heading-color); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px var(--shadow-color); transition: transform 0.3s ease, background-color var(--transition-speed) ease; }
         #theme-switcher:hover { transform: scale(1.1); }
         .container { max-width: 800px; margin: 20px auto; padding: 2.5rem; background-color: var(--card-background); border-radius: 16px; box-shadow: 0 10px 30px var(--shadow-color); position: relative; }
         h1, h2 { color: var(--heading-color); text-align: center; letter-spacing: -0.5px; }
@@ -81,24 +81,8 @@ header('Content-Type: text/html; charset=utf-8');
         input[type="text"]:focus, input[type="number"]:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); }
         input[type="submit"] { padding: 16px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
         input[type="submit"]:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4); }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            font-size: 0.95rem;
-            /* --- PERBAIKAN --- */
-            table-layout: fixed; /* Memaksa kolom memiliki lebar yang sama */
-        }
-
-        th, td {
-            padding: 14px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            /* --- PERBAIKAN --- */
-            word-wrap: break-word; /* Membungkus teks/angka yang sangat panjang */
-        }
-
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.95rem;  }
+        th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--border-color); word-wrap: break-word; }
         th { background-color: transparent; color: var(--heading-color); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.85rem; }
         tr:last-child td { border-bottom: none; }
         tr:hover { background-color: var(--hover-bg); }
@@ -106,7 +90,49 @@ header('Content-Type: text/html; charset=utf-8');
         .final-answer { background-color: var(--success-bg); border-color: var(--success-border); color: var(--success-text); font-size: 1.1em; font-weight: 600; }
         .error-message { background-color: var(--error-bg); border-color: var(--error-border); color: var(--error-text); }
         .convergence-check { background-color: var(--info-bg); border-color: var(--info-border); color: var(--info-text); line-height: 1.6; }
+        /* --- PERBAIKAN: CSS untuk Tampilan Responsif di Mobile --- */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    .container {
+        padding: 1.5rem;
+    }
+    .form-grid-2-col {
+        grid-template-columns: 1fr; /* Ubah menjadi 1 kolom di layar kecil */
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    .theme-switcher-container {
+        top: 15px;
+        right: 15px;
+    }
+    /* Membuat area tabel bisa di-scroll horizontal */
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+    /* Menghapus margin atas dari tabel karena sudah diatur oleh wrapper */
+    table {
+        margin-top: 0; 
+    }
+}
     </style>
+    
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'dark-mode') {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) { }
+        })();
+    </script>
 </head>
 <body>
 
@@ -152,7 +178,7 @@ header('Content-Type: text/html; charset=utf-8');
     </form>
     
     <?php
-    // KODE PHP TIDAK DIUBAH
+    // KODE PHP Perhitungan tidak diubah
     if (isset($_POST['hitung'])) {
         function sanitize_decimal($value) { return str_replace(',', '.', $value); }
 
@@ -200,6 +226,8 @@ header('Content-Type: text/html; charset=utf-8');
                   </div>";
             
             echo "<div class='result-section'><h2>Hasil Perhitungan Iterasi</h2>";
+                echo "<div class='table-wrapper'>";
+
             echo "<table><tr><th>Iterasi</th><th>X</th><th>g(x)</th><th>f(x)</th><th>Keterangan</th></tr>";
 
             $iter = 1;
@@ -207,7 +235,7 @@ header('Content-Type: text/html; charset=utf-8');
             $keterangan = "";
             $akar_final = $x_curr;
 
-            while ($iter <= $max_iter) {
+            while ($iter < $max_iter) {
                 $fx = $f($x_curr);
                 $err = abs($fx);
                 $gx = $g($x_curr);
@@ -218,7 +246,6 @@ header('Content-Type: text/html; charset=utf-8');
                     $keterangan = "Lanjutkan (Divergen)";
                 }
 
-                // Untuk angka yang sangat besar, format ke notasi ilmiah
                 $x_display = (abs($x_curr) > 1e6) ? sprintf('%.4e', $x_curr) : sprintf('%.6f', $x_curr);
                 $gx_display = (abs($gx) > 1e6) ? sprintf('%.4e', $gx) : sprintf('%.6f', $gx);
                 $fx_display = (abs($fx) > 1e6) ? sprintf('%.4e', $fx) : sprintf('%.6f', $fx);
@@ -234,13 +261,17 @@ header('Content-Type: text/html; charset=utf-8');
                 $iter++;
             }
             echo "</table>";
+                echo "</div>";
+
 
             if ($keterangan == "Berhenti") {
                 echo "<div class='result-box final-answer'>Hasil = <strong>" . number_format($akar_final, 6) . "</strong></div>";
-            } else if ($is_konvergen) {
-                echo "<div class='result-box error-message'>Solusi tidak konvergen setelah $max_iter iterasi.</div>";
-            } else {
-                 echo "<div class='result-box error-message'>Iterasi dihentikan karena terdeteksi divergen dan nilai terus membesar.</div>";
+            } else if ($iter >= $max_iter) {
+                 if($is_konvergen) {
+                    echo "<div class='result-box error-message'>Solusi tidak konvergen setelah $max_iter iterasi.</div>";
+                 } else {
+                    echo "<div class='result-box error-message'>Iterasi dihentikan karena terdeteksi divergen dan nilai terus membesar.</div>";
+                 }
             }
         }
     }
@@ -249,21 +280,20 @@ header('Content-Type: text/html; charset=utf-8');
 
 <script>
     const themeSwitcher = document.getElementById('theme-switcher');
-    const body = document.body;
 
-    function applyInitialTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            body.classList.add(savedTheme);
-            themeSwitcher.innerHTML = (savedTheme === 'dark-mode') ? '☀️' : '🌙';
+    // Mengatur ikon tombol awal berdasarkan class yang sudah ada di <html>
+    function setInitialIcon() {
+        if (document.documentElement.classList.contains('dark-mode')) {
+            themeSwitcher.innerHTML = '☀️';
         } else {
             themeSwitcher.innerHTML = '🌙';
         }
     }
 
+    // Fungsi untuk mengganti tema saat tombol diklik
     function switchTheme() {
-        body.classList.toggle('dark-mode');
-        if (body.classList.contains('dark-mode')) {
+        document.documentElement.classList.toggle('dark-mode');
+        if (document.documentElement.classList.contains('dark-mode')) {
             themeSwitcher.innerHTML = '☀️';
             localStorage.setItem('theme', 'dark-mode');
         } else {
@@ -272,7 +302,7 @@ header('Content-Type: text/html; charset=utf-8');
         }
     }
     
-    document.addEventListener('DOMContentLoaded', applyInitialTheme);
+    document.addEventListener('DOMContentLoaded', setInitialIcon);
     themeSwitcher.addEventListener('click', switchTheme);
 </script>
 

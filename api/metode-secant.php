@@ -1,6 +1,3 @@
-<?php
-header('Content-Type: text/html; charset=utf-8');
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -14,7 +11,6 @@ header('Content-Type: text/html; charset=utf-8');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- Variabel Warna untuk Light & Dark Mode --- */
         :root {
             --primary-color: #3498db;
             --secondary-color: #2980b9;
@@ -34,8 +30,9 @@ header('Content-Type: text/html; charset=utf-8');
             --btn-back-bg: #f1f3f5;
             --btn-back-hover: #e9ecef;
             --btn-back-text: #495057;
+            --transition-speed: 0.4s;
         }
-        body.dark-mode {
+        html.dark-mode {
             --primary-color: #4a90e2;
             --secondary-color: #3a7ac8;
             --background-color: #2c3e50;
@@ -56,8 +53,7 @@ header('Content-Type: text/html; charset=utf-8');
             --btn-back-text: #ecf0f1;
         }
 
-        /* --- Style Dasar & Helper --- */
-        * { box-sizing: border-box; transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
+        * { box-sizing: border-box; transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
         body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-color); margin: 0; padding: 2rem; }
         .container { max-width: 800px; margin: 20px auto; padding: 2.5rem; background-color: var(--card-background); border-radius: 16px; box-shadow: 0 10px 30px var(--shadow-color); position: relative; }
         h1, h2 { color: var(--heading-color); text-align: center; letter-spacing: -0.5px; }
@@ -65,15 +61,13 @@ header('Content-Type: text/html; charset=utf-8');
         h2 { font-weight: 600; margin-top: 2.5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary-color); display: inline-block; padding-bottom: 0.5rem; }
         .result-section { text-align: center; }
 
-        /* --- Tombol Ganti Tema & Tombol Kembali --- */
-        .theme-switcher-container { position: absolute; top: 20px; right: 20px; }
-        #theme-switcher { background: var(--card-background); border: 1px solid var(--border-color); color: var(--heading-color); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px var(--shadow-color); transition: transform 0.3s ease, background-color 0.4s ease; }
+        .theme-switcher-container { position: absolute; top: 20px; right: 20px; z-index: 100; }
+        #theme-switcher { background: var(--card-background); border: 1px solid var(--border-color); color: var(--heading-color); width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px var(--shadow-color); transition: transform 0.3s ease, background-color var(--transition-speed) ease; }
         #theme-switcher:hover { transform: scale(1.1); }
         .back-to-home { margin-bottom: 2.5rem; }
         .btn-back { display: inline-block; padding: 10px 20px; background-color: var(--btn-back-bg); color: var(--btn-back-text); text-decoration: none; border-radius: 50px; font-weight: 600; }
         .btn-back:hover { background-color: var(--btn-back-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-        /* --- Form --- */
         form { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
         .form-grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
         .form-group { display: flex; flex-direction: column; text-align: left; }
@@ -83,18 +77,58 @@ header('Content-Type: text/html; charset=utf-8');
         input[type="submit"] { padding: 16px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1.1rem; font-weight: 600; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3); }
         input[type="submit"]:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4); }
 
-        /* --- Tabel --- */
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.95rem; }
-        th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.95rem;  }
+        th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--border-color); word-wrap: break-word; }
         th { background-color: transparent; color: var(--heading-color); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.85rem; }
         tr:last-child td { border-bottom: none; }
         tr:hover { background-color: var(--hover-bg); }
 
-        /* --- Kotak Hasil --- */
         .result-box { margin-top: 1.5rem; padding: 1.25rem; border-radius: 8px; text-align: center; border-left: 5px solid; }
         .final-answer { background-color: var(--success-bg); border-color: var(--success-border); color: var(--success-text); font-size: 1.1em; font-weight: 600; }
         .error-message { background-color: var(--error-bg); border-color: var(--error-border); color: var(--error-text); }
+        /* --- PERBAIKAN: CSS untuk Tampilan Responsif di Mobile --- */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    .container {
+        padding: 1.5rem;
+    }
+    .form-grid-2-col {
+        grid-template-columns: 1fr; /* Ubah menjadi 1 kolom di layar kecil */
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    .theme-switcher-container {
+        top: 15px;
+        right: 15px;
+    }
+    /* Membuat area tabel bisa di-scroll horizontal */
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+    /* Menghapus margin atas dari tabel karena sudah diatur oleh wrapper */
+    table {
+        margin-top: 0; 
+    }
+}
     </style>
+
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'dark-mode') {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) { }
+        })();
+    </script>
 </head>
 <body>
 
@@ -136,7 +170,6 @@ header('Content-Type: text/html; charset=utf-8');
     </form>
 
     <?php
-    // --- BLOK PHP TIDAK DIUBAH SAMA SEKALI ---
     if (isset($_POST['hitung'])) {
         function sanitize_decimal($value) {
             return str_replace(',', '.', $value);
@@ -166,7 +199,8 @@ header('Content-Type: text/html; charset=utf-8');
 
         if (!$error_fungsi) {
             echo "<div class='result-section'><h2>Hasil Perhitungan</h2>";
-            
+                echo "<div class='table-wrapper'>";
+
             echo "<table>
                     <tr>
                         <th>Iterasi</th>
@@ -219,6 +253,8 @@ header('Content-Type: text/html; charset=utf-8');
                 $iter++;
             }
             echo "</table>";
+                echo "</div>";
+
 
             if ($keterangan == "Berhenti") {
                 echo "<div class='result-box final-answer'>Kesimpulan Akar = <strong>" . number_format($x_next, 5) . "</strong></div>";
@@ -232,21 +268,18 @@ header('Content-Type: text/html; charset=utf-8');
 
 <script>
     const themeSwitcher = document.getElementById('theme-switcher');
-    const body = document.body;
-
-    function applyInitialTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            body.classList.add(savedTheme);
-            themeSwitcher.innerHTML = (savedTheme === 'dark-mode') ? '☀️' : '🌙';
+    
+    function setInitialIcon() {
+        if (document.documentElement.classList.contains('dark-mode')) {
+            themeSwitcher.innerHTML = '☀️';
         } else {
             themeSwitcher.innerHTML = '🌙';
         }
     }
 
     function switchTheme() {
-        body.classList.toggle('dark-mode');
-        if (body.classList.contains('dark-mode')) {
+        document.documentElement.classList.toggle('dark-mode');
+        if (document.documentElement.classList.contains('dark-mode')) {
             themeSwitcher.innerHTML = '☀️';
             localStorage.setItem('theme', 'dark-mode');
         } else {
@@ -255,7 +288,7 @@ header('Content-Type: text/html; charset=utf-8');
         }
     }
     
-    document.addEventListener('DOMContentLoaded', applyInitialTheme);
+    document.addEventListener('DOMContentLoaded', setInitialIcon);
     themeSwitcher.addEventListener('click', switchTheme);
 </script>
 
